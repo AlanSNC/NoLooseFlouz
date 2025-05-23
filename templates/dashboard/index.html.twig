@@ -38,31 +38,76 @@
         <div class="card p-3">
             <h6 class="mb-3"><i class="bi bi-pie-chart"></i> Répartition par catégorie</h6>
             <canvas id="pieCategories" height="220"></canvas>
+            <div id="pieHelp" class="text-muted small mt-2" style="display:none;">Aucune donnée à afficher pour ce mois.</div>
         </div>
     </div>
     <div class="col-md-6 mb-4">
         <div class="card p-3">
             <h6 class="mb-3"><i class="bi bi-bar-chart"></i> Dépenses par mois</h6>
             <canvas id="barMois" height="220"></canvas>
+            <div id="barHelp" class="text-muted small mt-2" style="display:none;">Aucune donnée à afficher pour cette année.</div>
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 <script>
 const pieData = {{ chart_categories|default('{}')|raw }};
 const barData = {{ chart_mois|default('{}')|raw }};
-if (pieData && pieData.labels) {
+const palette = [
+    '#4F8A8B', '#FBD46D', '#F76B8A', '#24305E', '#A3D2CA', '#FFB085', '#6C63FF', '#FF6F61', '#2D4059', '#EA5455', '#FFD460', '#3EC1D3'
+];
+// Pie chart
+if (pieData && pieData.labels && pieData.labels.length > 0) {
+    pieData.datasets[0].backgroundColor = palette.slice(0, pieData.labels.length);
     new Chart(document.getElementById('pieCategories'), {
         type: 'pie',
         data: pieData,
-        options: {plugins: {legend: {position: 'bottom'}}}
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: getComputedStyle(document.body).color, font: { size: 16 } } },
+                title: { display: true, text: 'Répartition des dépenses par catégorie', color: getComputedStyle(document.body).color, font: { size: 18, weight: 'bold' } },
+                tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed} €` } },
+                datalabels: { color: '#222', font: { weight: 'bold' }, formatter: v => v + ' €' }
+            },
+            animation: { animateScale: true, animateRotate: true },
+            layout: { padding: 10 },
+            borderWidth: 2,
+            borderColor: '#fff',
+        },
+        plugins: [ChartDataLabels]
     });
+} else {
+    document.getElementById('pieHelp').style.display = 'block';
 }
-if (barData && barData.labels) {
+// Bar chart
+if (barData && barData.labels && barData.datasets && barData.datasets[0].data.some(v => v > 0)) {
+    barData.datasets[0].backgroundColor = palette[0];
     new Chart(document.getElementById('barMois'), {
         type: 'bar',
         data: barData,
-        options: {plugins: {legend: {display: false}}}
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Dépenses mensuelles', color: getComputedStyle(document.body).color, font: { size: 18, weight: 'bold' } },
+                tooltip: { callbacks: { label: ctx => `${ctx.parsed.y} €` } },
+                datalabels: { anchor: 'end', align: 'top', color: getComputedStyle(document.body).color, font: { weight: 'bold' }, formatter: v => v > 0 ? v + ' €' : '' }
+            },
+            scales: {
+                x: { ticks: { color: getComputedStyle(document.body).color, font: { size: 14 } }, grid: { color: '#eee' } },
+                y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).color, font: { size: 14 } }, grid: { color: '#eee' } }
+            },
+            layout: { padding: 10 },
+            borderRadius: 8,
+            borderSkipped: false,
+            animation: { duration: 900, easing: 'easeOutBounce' }
+        },
+        plugins: [ChartDataLabels]
     });
+} else {
+    document.getElementById('barHelp').style.display = 'block';
 }
 </script>
 {% endblock %}
