@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une catégorie{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Créer une catégorie</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Nom de la catégorie</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Créer</button>
+        <a href="{{ path('app_category') }}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}
