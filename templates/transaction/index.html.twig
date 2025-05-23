@@ -3,30 +3,37 @@
 {% block title %}Transactions{% endblock %}
 
 {% block body %}
-<h1>Mes transactions</h1>
-<a href="{{ path('transaction_create') }}" class="btn btn-success mb-3">Ajouter une transaction</a>
-<table class="table table-striped">
-    <thead>
+<h1 class="mb-4"><i class="bi bi-list-columns"></i> Mes transactions</h1>
+<a href="{{ path('transaction_create') }}" class="btn btn-success mb-3"><i class="bi bi-plus-circle"></i> Ajouter une transaction</a>
+<div class="table-responsive">
+<table class="table table-striped align-middle shadow-sm">
+    <thead class="table-light">
         <tr>
             <th>Date</th>
             <th>Montant</th>
             <th>Devise</th>
             <th>Catégorie</th>
             <th>Description</th>
+            <th class="text-end">Actions</th>
         </tr>
     </thead>
     <tbody>
     {% for transaction in transactions %}
         <tr>
             <td>{{ transaction.date ? transaction.date|date('Y-m-d') : '' }}</td>
-            <td>{{ transaction.amountOriginal }}</td>
-            <td>{{ transaction.currencyOriginal }}</td>
+            <td><span class="badge bg-primary fs-6">{{ transaction.amountOriginal }}</span></td>
+            <td><span class="badge bg-secondary">{{ transaction.currencyOriginal }}</span></td>
             <td>{{ transaction.categoryId ? transaction.categoryId.name : '' }}</td>
             <td>{{ transaction.description }}</td>
+            <td class="text-end">
+                <a href="{{ path('transaction_edit', {'id': transaction.id}) }}" class="btn btn-outline-primary btn-sm" title="Modifier"><i class="bi bi-pencil"></i></a>
+                <a href="{{ path('transaction_delete', {'id': transaction.id}) }}" class="btn btn-outline-danger btn-sm ms-1" title="Supprimer"><i class="bi bi-trash"></i></a>
+            </td>
         </tr>
     {% else %}
-        <tr><td colspan="5">Aucune transaction.</td></tr>
+        <tr><td colspan="6" class="text-center">Aucune transaction.</td></tr>
     {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}

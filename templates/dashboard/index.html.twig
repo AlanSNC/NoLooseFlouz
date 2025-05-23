@@ -3,42 +3,48 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-<h1>Dashboard</h1>
+<h1 class="mb-4"><i class="bi bi-speedometer2"></i> Dashboard</h1>
 <div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card text-bg-primary mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Solde global</h5>
-                <p class="card-text fs-3">{{ solde|default(0) }} €</p>
+    <div class="col-md-4 mb-3">
+        <div class="card text-bg-primary shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="bi bi-wallet2"></i> Solde global</h5>
+                <p class="card-text display-5 fw-bold">{{ solde|default(0) }} €</p>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card text-bg-success mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Budget du mois</h5>
-                <p class="card-text fs-3">{{ budget_mois|default(0) }} €</p>
+    <div class="col-md-4 mb-3">
+        <div class="card text-bg-success shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="bi bi-calendar2-week"></i> Budget du mois</h5>
+                <p class="card-text display-5 fw-bold">{{ budget_mois|default(0) }} €</p>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card text-bg-danger mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Dépenses du mois</h5>
-                <p class="card-text fs-3">{{ depenses_mois|default(0) }} €</p>
+    <div class="col-md-4 mb-3">
+        <div class="card text-bg-danger shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="bi bi-cash-stack"></i> Dépenses du mois</h5>
+                <p class="card-text display-5 fw-bold">{{ depenses_mois|default(0) }} €</p>
             </div>
         </div>
     </div>
 </div>
 {% if alerte_depassement %}
-    <div class="alert alert-warning">Attention : vous avez dépassé votre budget mensuel !</div>
+    <div class="alert alert-warning fade-in"><i class="bi bi-exclamation-triangle"></i> Attention : vous avez dépassé votre budget mensuel !</div>
 {% endif %}
-<div class="row">
-    <div class="col-md-6">
-        <canvas id="pieCategories"></canvas>
+<div class="row mt-4">
+    <div class="col-md-6 mb-4">
+        <div class="card p-3">
+            <h6 class="mb-3"><i class="bi bi-pie-chart"></i> Répartition par catégorie</h6>
+            <canvas id="pieCategories" height="220"></canvas>
+        </div>
     </div>
-    <div class="col-md-6">
-        <canvas id="barMois"></canvas>
+    <div class="col-md-6 mb-4">
+        <div class="card p-3">
+            <h6 class="mb-3"><i class="bi bi-bar-chart"></i> Dépenses par mois</h6>
+            <canvas id="barMois" height="220"></canvas>
+        </div>
     </div>
 </div>
 <script>
@@ -47,13 +53,15 @@ const barData = {{ chart_mois|default('{}')|raw }};
 if (pieData && pieData.labels) {
     new Chart(document.getElementById('pieCategories'), {
         type: 'pie',
-        data: pieData
+        data: pieData,
+        options: {plugins: {legend: {position: 'bottom'}}}
     });
 }
 if (barData && barData.labels) {
     new Chart(document.getElementById('barMois'), {
         type: 'bar',
-        data: barData
+        data: barData,
+        options: {plugins: {legend: {display: false}}}
     });
 }
 </script>

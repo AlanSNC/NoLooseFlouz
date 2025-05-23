@@ -1,47 +1,121 @@
 <!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}NoLooseFlouz{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="{{ path('app_dashboard') }}">NoLooseFlouz</a>
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="{{ path('app_dashboard') }}">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ path('app_category') }}">Catégories</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ path('monthly_budget_index') }}">Budgets</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ path('transaction_index') }}">Transactions</a></li>
-                    </ul>
-                    <ul class="navbar-nav ms-auto">
-                        {% if app.user %}
-                            <li class="nav-item"><span class="navbar-text me-2">{{ app.user.email }}</span></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a></li>
-                        {% else %}
-                            <li class="nav-item"><a class="nav-link" href="{{ path('user_login') }}">Connexion</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div class="container">
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ label }}">{{ message }}</div>
-                {% endfor %}
-            {% endfor %}
-            {% block body %}{% endblock %}
+<html lang="fr" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}NoLooseFlouz{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+            min-height: 100vh;
+            transition: background 0.5s;
+        }
+        .navbar {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px) scale(1.01);
+        }
+        .table {
+            background: #fff;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .btn-primary, .btn-success, .btn-danger, .btn-warning {
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .fade-in {
+            animation: fadeIn 0.7s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: none; }
+        }
+        .sticky-top {
+            position: sticky; top: 0; z-index: 1030;
+        }
+        .footer {
+            background: #222; color: #bbb; padding: 1rem 0; text-align: center; margin-top: 3rem;
+        }
+        .dark-mode body {
+            background: linear-gradient(120deg, #23272f 0%, #2d3748 100%);
+            color: #e2e8f0;
+        }
+        .dark-mode .navbar, .dark-mode .footer {
+            background: #181c22 !important;
+        }
+        .dark-mode .card, .dark-mode .table {
+            background: #23272f !important; color: #e2e8f0;
+        }
+        .dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+            background: #23272f !important;
+        }
+        .dark-mode .btn {
+            color: #fff;
+        }
+    </style>
+    {% block stylesheets %}{% endblock %}
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+</head>
+<body class="fade-in">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{{ path('app_dashboard') }}">
+            <i class="bi bi-cash-coin fs-3"></i> <span>NoLooseFlouz</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="{{ path('app_dashboard') }}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ path('app_category') }}"><i class="bi bi-tags"></i> Catégories</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ path('monthly_budget_index') }}"><i class="bi bi-calendar2-week"></i> Budgets</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ path('transaction_index') }}"><i class="bi bi-list-columns"></i> Transactions</a></li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                {% if app.user %}
+                    <li class="nav-item"><span class="navbar-text me-2"><i class="bi bi-person-circle"></i> {{ app.user.email }}</span></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right"></i> Déconnexion</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('user_login') }}"><i class="bi bi-box-arrow-in-right"></i> Connexion</a></li>
+                {% endif %}
+                <li class="nav-item ms-3">
+                    <button id="toggle-dark" class="btn btn-outline-light btn-sm" title="Mode sombre"><i class="bi bi-moon-stars"></i></button>
+                </li>
+            </ul>
         </div>
-    </body>
+    </div>
+</nav>
+<div class="container">
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }} mt-3 fade-in">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+    {% block body %}{% endblock %}
+</div>
+{# Footer supprimé pour anonymisation #}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Dark mode toggle
+const btn = document.getElementById('toggle-dark');
+btn.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.documentElement.classList.contains('dark-mode'));
+});
+if (localStorage.getItem('darkMode') === 'true') {
+    document.documentElement.classList.add('dark-mode');
+}
+</script>
+</body>
 </html>

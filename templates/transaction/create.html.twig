@@ -4,68 +4,44 @@
 
 {% block body %}
 <div class="container mt-4">
-    <h2>Ajouter une dépense</h2>
-    {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
-    <form method="post">
-        <div class="mb-3">
-            <label for="amount" class="form-label">Montant</label>
-            <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
+    <div class="card shadow-sm mx-auto" style="max-width: 540px;">
+        <div class="card-body">
+            <h2 class="mb-4"><i class="bi bi-plus-circle"></i> Ajouter une dépense</h2>
+            <form method="post" autocomplete="off">
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Montant</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
+                        <input type="number" step="0.01" class="form-control" id="amount" name="amount" required placeholder="0.00" autofocus>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="currency" class="form-label">Devise</label>
+                    <input type="text" class="form-control" id="currency" name="currency" value="EUR" required maxlength="3" placeholder="EUR">
+                </div>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="date" name="date" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" placeholder="Ex : courses, restaurant...">
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="form-label">Catégorie</label>
+                    <select class="form-select" id="category" name="category" required>
+                        <option value="">Choisir...</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}">{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Ajouter</button>
+                    <a href="{{ path('transaction_index') }}" class="btn btn-outline-secondary"><i class="bi bi-x-circle"></i> Annuler</a>
+                </div>
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="currency" class="form-label">Devise</label>
-            <input type="text" class="form-control" id="currency" name="currency" value="EUR" required>
-        </div>
-        <div class="mb-3">
-            <label for="date" class="form-label">Date</label>
-            <input type="date" class="form-control" id="date" name="date" required>
-        </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <input type="text" class="form-control" id="description" name="description">
-        </div>
-        <div class="mb-3">
-            <label for="category" class="form-label">Catégorie</label>
-            <select class="form-control" id="category" name="category" required>
-                <option value="">Choisir...</option>
-                {% for cat in categories %}
-                    <option value="{{ cat.id }}">{{ cat.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Ajouter</button>
-        <a href="{{ path('transaction_list') }}" class="btn btn-secondary">Annuler</a>
-    </form>
-    <hr>
-    <button id="test-api-create" class="btn btn-warning mt-3">Tester création API (JWT)</button>
-    <div id="api-result" class="mt-2"></div>
-    <div class="alert alert-info">ID utilisateur connecté (pour debug) : <span id="user-id">{{ user_id }}</span></div>
-    <script>
-    const userId = {{ user_id|default('null') }};
-    document.getElementById('test-api-create').addEventListener('click', async function() {
-        const amount = document.getElementById('amount').value;
-        const currency = document.getElementById('currency').value;
-        const date = document.getElementById('date').value;
-        const description = document.getElementById('description').value;
-        // Optionnel : catégorie
-        const category = document.getElementById('category').value;
-        const body = {
-            amount: amount,
-            currency: currency,
-            date: date,
-            description: description,
-            // categoryId: category // à activer si l'API le gère
-            user_id_id: userId // Pour debug, envoyé côté client (le back doit ignorer)
-        };
-        const response = await fetchWithJWT('/api/transaction', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        });
-        const data = await response.json();
-        document.getElementById('api-result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-    });
-    </script>
+    </div>
 </div>
 {% endblock %}

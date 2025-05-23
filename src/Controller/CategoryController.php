@@ -83,9 +83,21 @@ final class CategoryController extends AbstractController
             $this->addFlash('error', 'Accès refusé.');
             return $this->redirectToRoute('app_category');
         }
-        $em->remove($category);
-        $em->flush();
-        $this->addFlash('success', 'Catégorie supprimée avec succès.');
+        // Vérifier si la catégorie est utilisée par une transaction
+        $transactionCount = $em->getRepository(\App\Entity\Transaction::class)->count(['categoryId' => $category]);
+        if ($transactionCount > 0) {
+            $this->addFlash('error', 'Impossible de supprimer cette catégorie car elle est utilisée par au moins une transaction. Supprimez ou modifiez d\'abord les transactions associées.');
+            return $this->redirectToRoute('app_category');
+        }
+        try {
+            $em->remove($category);
+            $em->flush();
+            $this->addFlash('success', 'Catégorie supprimée avec succès.');
+        } catch (\Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException | \Doctrine\ORM\Exception\ORMException $e) {
+            $this->addFlash('error', 'Impossible de supprimer cette catégorie car elle est utilisée par au moins une transaction. Supprimez ou modifiez d\'abord les transactions associées.');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Erreur lors de la suppression de la catégorie.');
+        }
         return $this->redirectToRoute('app_category');
     }
 }

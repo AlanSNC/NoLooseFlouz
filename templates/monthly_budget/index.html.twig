@@ -3,14 +3,16 @@
 {% block title %}Budgets mensuels{% endblock %}
 
 {% block body %}
-<h1>Mes budgets mensuels</h1>
-<a href="{{ path('monthly_budget_create') }}" class="btn btn-success mb-3">Ajouter un budget</a>
-<table class="table table-striped">
-    <thead>
+<h1 class="mb-4"><i class="bi bi-calendar2-week"></i> Mes budgets mensuels</h1>
+<a href="{{ path('monthly_budget_create') }}" class="btn btn-success mb-3"><i class="bi bi-plus-circle"></i> Ajouter un budget</a>
+<div class="table-responsive">
+<table class="table table-striped align-middle shadow-sm">
+    <thead class="table-light">
         <tr>
             <th>Mois</th>
             <th>Année</th>
             <th>Montant</th>
+            <th class="text-end">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -18,11 +20,16 @@
         <tr>
             <td>{{ budget.month }}</td>
             <td>{{ budget.year }}</td>
-            <td>{{ budget.amount }}</td>
+            <td><span class="badge bg-primary fs-6">{{ budget.amount }}</span></td>
+            <td class="text-end">
+                <a href="{{ path('monthly_budget_edit', {'id': budget.id}) }}" class="btn btn-outline-primary btn-sm" title="Modifier"><i class="bi bi-pencil"></i></a>
+                <a href="{{ path('monthly_budget_delete', {'id': budget.id}) }}" class="btn btn-outline-danger btn-sm ms-1" title="Supprimer"><i class="bi bi-trash"></i></a>
+            </td>
         </tr>
     {% else %}
-        <tr><td colspan="3">Aucun budget.</td></tr>
+        <tr><td colspan="4" class="text-center">Aucun budget.</td></tr>
     {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}
