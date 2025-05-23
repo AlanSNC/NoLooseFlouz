@@ -22,9 +22,16 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         main:
-            stateless: true
+            pattern: ^/
             provider: app_user_provider
-            jwt: ~
+            stateless: false
+            form_login:
+                login_path: /login
+                check_path: /login
+                default_target_path: /dashboard
+            logout:
+                path: /logout
+                target: /login
 
     access_control:
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }

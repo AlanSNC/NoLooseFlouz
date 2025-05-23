@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Supprimer la transaction{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Supprimer la transaction</h2>
+    <p>Êtes-vous sûr de vouloir supprimer la transaction du <strong>{{ transaction.date|date('Y-m-d') }}</strong> pour <strong>{{ transaction.amountOriginal }} {{ transaction.currencyOriginal }}</strong> ?</p>
+    <form method="post">
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+        <a href="{{ path('transaction_list') }}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

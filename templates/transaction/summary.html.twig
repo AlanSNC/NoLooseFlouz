@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résumé mensuel{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Résumé mensuel des dépenses</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Mois</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in summary %}
+            <tr>
+                <td>{{ row.month }}</td>
+                <td>{{ row.total }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="2">Aucune donnée</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

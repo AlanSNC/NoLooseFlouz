@@ -2,38 +2,21 @@
 
 {% block body %}
 <h2>Connexion</h2>
-<form id="login-form">
+<form method="post" action="{{ path('user_login') }}">
     <label>Email</label>
-    <input type="email" name="email" required>
+    <input type="email" name="_username" required>
 
     <label>Mot de passe</label>
-    <input type="password" name="password" required>
+    <input type="password" name="_password" required>
 
     <button type="submit">Se connecter</button>
 </form>
 
-<p id="result"></p>
-
-<script>
-document.getElementById("login-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const form = e.target;
-    const response = await fetch('/api/login_check', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-            email: form.email.value,
-            password: form.password.value
-        })
-    });
-
-    const data = await response.json();
-    document.getElementById("result").textContent = response.ok
-        ? "Connexion réussie !"
-        : (data.message || "Erreur");
-});
-</script>
+{% if app.flashes('error') %}
+    <div class="alert alert-danger mt-2">
+        {% for message in app.flashes('error') %}{{ message }}<br>{% endfor %}
+    </div>
+{% endif %}
 
 <a href="{{ path('user_register') }}">Créer un compte</a>
 {% endblock %}

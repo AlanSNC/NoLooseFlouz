@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Http\Attribute\Logout;
 
 
 final class AuthController extends AbstractController
@@ -63,5 +64,12 @@ final class AuthController extends AbstractController
     public function login(): Response
     {
         return $this->render('auth/login.html.twig');
+    }
+
+    #[Route('/logout', name: 'app_logout')]
+    #[Logout]
+    public function logout(): void
+    {
+        // Symfony gère la déconnexion automatiquement
     }
 }

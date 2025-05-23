@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Budgets mensuels{% endblock %}
+
+{% block body %}
+<h1>Mes budgets mensuels</h1>
+<a href="{{ path('monthly_budget_create') }}" class="btn btn-success mb-3">Ajouter un budget</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Mois</th>
+            <th>Année</th>
+            <th>Montant</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for budget in budgets %}
+        <tr>
+            <td>{{ budget.month }}</td>
+            <td>{{ budget.year }}</td>
+            <td>{{ budget.amount }}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="3">Aucun budget.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

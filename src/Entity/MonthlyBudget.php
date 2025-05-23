@@ -22,8 +22,9 @@ class MonthlyBudget
     #[ORM\Column]
     private ?int $amount = null;
 
-    #[ORM\ManyToOne(inversedBy: 'monthlyBudgets')]
-    private ?User $userId = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -66,14 +67,14 @@ class MonthlyBudget
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->userId;
+        return $this->user;
     }
 
-    public function setUserId(?User $userId): static
+    public function setUser(?User $user): static
     {
-        $this->userId = $userId;
+        $this->user = $user;
 
         return $this;
     }

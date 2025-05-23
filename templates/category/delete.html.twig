@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Supprimer la catégorie{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Supprimer la catégorie</h2>
+    <p>Êtes-vous sûr de vouloir supprimer la catégorie <strong>{{ category.name }}</strong> ?</p>
+    <form method="post">
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+        <a href="{{ path('app_category') }}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,20 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DashboardController!{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/alsen/OWONO/NoLooseFlouz/src/Controller/DashboardController.php</code></li>
-        <li>Your template at <code>C:/Users/alsen/OWONO/NoLooseFlouz/templates/dashboard/index.html.twig</code></li>
-    </ul>
+<h1>Dashboard</h1>
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Solde global</h5>
+                <p class="card-text fs-3">{{ solde|default(0) }} €</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Budget du mois</h5>
+                <p class="card-text fs-3">{{ budget_mois|default(0) }} €</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-danger mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Dépenses du mois</h5>
+                <p class="card-text fs-3">{{ depenses_mois|default(0) }} €</p>
+            </div>
+        </div>
+    </div>
 </div>
+{% if alerte_depassement %}
+    <div class="alert alert-warning">Attention : vous avez dépassé votre budget mensuel !</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-6">
+        <canvas id="pieCategories"></canvas>
+    </div>
+    <div class="col-md-6">
+        <canvas id="barMois"></canvas>
+    </div>
+</div>
+<script>
+const pieData = {{ chart_categories|default('{}')|raw }};
+const barData = {{ chart_mois|default('{}')|raw }};
+if (pieData && pieData.labels) {
+    new Chart(document.getElementById('pieCategories'), {
+        type: 'pie',
+        data: pieData
+    });
+}
+if (barData && barData.labels) {
+    new Chart(document.getElementById('barMois'), {
+        type: 'bar',
+        data: barData
+    });
+}
+</script>
 {% endblock %}

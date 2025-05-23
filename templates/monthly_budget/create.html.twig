@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un budget mensuel{% endblock %}
+
+{% block body %}
+<h1>Créer un budget mensuel</h1>
+<form method="post">
+    <div class="mb-3">
+        <label for="month" class="form-label">Mois</label>
+        <input type="number" id="month" name="month" class="form-control" min="1" max="12" required>
+    </div>
+    <div class="mb-3">
+        <label for="year" class="form-label">Année</label>
+        <input type="number" id="year" name="year" class="form-control" min="2000" max="2100" required>
+    </div>
+    <div class="mb-3">
+        <label for="amount" class="form-label">Montant</label>
+        <input type="number" id="amount" name="amount" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Créer</button>
+    <a href="{{ path('monthly_budget_index') }}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

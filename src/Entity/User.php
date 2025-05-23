@@ -36,13 +36,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Transaction>
      */
-    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'userId')]
+    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'user')]
     private Collection $transactions;
 
     /**
      * @var Collection<int, MonthlyBudget>
      */
-    #[ORM\OneToMany(targetEntity: MonthlyBudget::class, mappedBy: 'userId')]
+    #[ORM\OneToMany(targetEntity: MonthlyBudget::class, mappedBy: 'user')]
     private Collection $monthlyBudgets;
 
     public function __construct()
@@ -136,7 +136,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->transactions->contains($transaction)) {
             $this->transactions->add($transaction);
-            $transaction->setUserId($this);
+            $transaction->setUser($this);
         }
 
         return $this;
@@ -146,8 +146,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->transactions->removeElement($transaction)) {
             // set the owning side to null (unless already changed)
-            if ($transaction->getUserId() === $this) {
-                $transaction->setUserId(null);
+            if ($transaction->getUser() === $this) {
+                $transaction->setUser(null);
             }
         }
 
@@ -166,7 +166,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->monthlyBudgets->contains($monthlyBudget)) {
             $this->monthlyBudgets->add($monthlyBudget);
-            $monthlyBudget->setUserId($this);
+            $monthlyBudget->setUser($this);
         }
 
         return $this;
@@ -176,8 +176,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->monthlyBudgets->removeElement($monthlyBudget)) {
             // set the owning side to null (unless already changed)
-            if ($monthlyBudget->getUserId() === $this) {
-                $monthlyBudget->setUserId(null);
+            if ($monthlyBudget->getUser() === $this) {
+                $monthlyBudget->setUser(null);
             }
         }
 

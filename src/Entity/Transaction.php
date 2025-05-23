@@ -33,10 +33,11 @@ class Transaction
     private ?\DateTime $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'transactions')]
-    private ?User $userId = null;
-
-    #[ORM\ManyToOne(inversedBy: 'transactions')]
     private ?Category $categoryId = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -115,18 +116,6 @@ class Transaction
         return $this;
     }
 
-    public function getUserId(): ?User
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(?User $userId): static
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
     public function getCategoryId(): ?Category
     {
         return $this->categoryId;
@@ -135,6 +124,18 @@ class Transaction
     public function setCategoryId(?Category $categoryId): static
     {
         $this->categoryId = $categoryId;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

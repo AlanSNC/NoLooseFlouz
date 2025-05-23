@@ -3,15 +3,13 @@
 {% block title %}Modifier la catégorie{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h2>Modifier la catégorie</h2>
-    <form method="post">
-        <div class="mb-3">
-            <label for="name" class="form-label">Nom de la catégorie</label>
-            <input type="text" class="form-control" id="name" name="name" value="{{ category.name }}" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-        <a href="{{ path('app_category') }}" class="btn btn-secondary">Annuler</a>
-    </form>
-</div>
+<h1>Modifier la catégorie</h1>
+<form method="post">
+    <div class="mb-3">
+        <label for="name" class="form-label">Nom de la catégorie</label>
+        <input type="text" id="name" name="name" class="form-control" value="{{ category.name }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="{{ path('app_category') }}" class="btn btn-secondary">Annuler</a>
+</form>
 {% endblock %}
